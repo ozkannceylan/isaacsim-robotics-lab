@@ -22,3 +22,11 @@
 - [x] Run structure checks.
 - [x] Run tests.
 - [x] Run end-to-end command.
+
+## Phase 3 — Completion & Handoff
+- [x] Confirm Lab 2 is complete for current scaffold scope.
+- [x] Update root `README.md` with Lab 2 completion status.
+- [x] Record final Lab 2 lessons and next actions.
+
+## Remaining External Dependency
+- [ ] Align with canonical Lab 2 brief/assets when provided.

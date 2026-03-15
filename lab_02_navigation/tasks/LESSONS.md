@@ -1,12 +1,13 @@
 # Lessons Learned
 
 ## Context
-Lab 2 was started after completing Lab 1, following the same order: PLAN → ARCHITECTURE → TODO → IMPLEMENT.
+Lab 2 was completed after Lab 1 using the same ordered workflow: PLAN → ARCHITECTURE → TODO → IMPLEMENT.
 
 ## What Worked
 - Reusing the Lab 1 workflow accelerated initial setup.
 - Typed config/context models kept planner interfaces simple.
 - One-command check script improved repeatability.
+- Updating root README at completion makes project status unambiguous.
 
 ## What Didn't Work
 - Placeholder map is enough for scaffold tests only; no obstacle logic yet.
