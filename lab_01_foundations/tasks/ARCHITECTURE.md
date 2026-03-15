@@ -1,6 +1,6 @@
 # Lab 01 Foundations — Architecture
 
-> Fallback context: source brief files were not present in repository (`plan/lab_01_foundations.md`, `MASTER_PLAN.md`). This architecture establishes a practical baseline for Lab 1.
+> Context: architecture aligned to `plan/lab_01_foundations.md` and `plan/MASTER_PLAN.md`.
 
 ## 1) Module Map
 

@@ -1,6 +1,6 @@
 # Lab 01 Foundations — Implementation Plan
 
-> Note: `plan/lab_01_foundations.md`, `MASTER_PLAN.md`, and `CLAUDE.md` were not found in this repository snapshot. This plan is a from-scratch fallback aligned with a typical robotics-lab "foundations" brief.
+> Context: this plan aligns to the canonical brief at `plan/lab_01_foundations.md` and the process in `plan/MASTER_PLAN.md`.
 
 ## Goal
 Establish a clean, reproducible Lab 1 foundation with project structure, baseline interfaces, configuration stubs, and verification workflow.

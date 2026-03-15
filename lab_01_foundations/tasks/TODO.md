@@ -36,4 +36,4 @@
 - [x] Log implementation issues/open questions in `tasks/LESSONS.md`.
 
 ## Risks / Blockers
-- [ ] Confirm missing brief docs (`plan/lab_01_foundations.md`, `MASTER_PLAN.md`, `CLAUDE.md`) or supply canonical versions.
+- [x] Canonical planning docs are present (`plan/lab_01_foundations.md`, `plan/MASTER_PLAN.md`, `CLAUDE.md`).

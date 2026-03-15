@@ -20,6 +20,14 @@ Planned upcoming labs (subject to official brief alignment):
 ## Completion Rule
 After finishing each lab, update this root `README.md` status section so progress is always current.
 
+## Planning Briefs
+Canonical planning briefs are stored in `plan/`:
+- `plan/MASTER_PLAN.md`
+- `plan/lab_01_foundations.md`
+- `plan/lab_02_navigation.md`
+- `plan/lab_03_perception.md`
+
+
 ## Quick Commands
 ### Lab 1
 ```bash
