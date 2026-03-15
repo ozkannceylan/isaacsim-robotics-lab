@@ -1,0 +1,6 @@
+{
+  "name": "placeholder_camera",
+  "fov_deg": 90,
+  "channels": ["intensity"],
+  "notes": "Replace with canonical Lab 3 sensor model"
+}
