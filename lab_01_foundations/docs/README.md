@@ -1,42 +1,58 @@
 # Lab 01 Foundations
 
-This lab now includes planning + full scaffold implementation phases:
+Lab 01 is now aligned to `plan/lab_01_foundations.md` instead of the earlier placeholder scaffold.
 
-- **Phase 0**: Plan/architecture/task artifacts.
-- **Phase 1**: Source scaffold, configs, model placeholders.
-- **Phase 2**: Typed config/runtime models and deterministic loop metrics.
-- **Phase 3**: Validation scripts and test coverage.
-- **Phase 4**: Execution docs and lessons log.
+## What this lab delivers
 
-## Run (default config)
+- A standalone Isaac Lab script launched with `isaaclab -p`
+- A warehouse scene with a support table, UR5e spawn, and RGB camera
+- A 300-step, 60 Hz sine-wave joint command across the six UR5e arm joints
+- Joint-state CSV logging plus a 30-frame PNG capture sequence
+- A mock runtime path for CI and local verification when Isaac Lab is not installed
+
+## Real capstone run
 
 ```bash
 bash lab_01_foundations/scripts/run_lab.sh
 ```
 
-## Validate structure + tests + run (all phase checks)
+This invokes:
+
+```bash
+isaaclab -p lab_01_foundations/foundations_standalone.py \
+  --config lab_01_foundations/configs/local.yaml \
+  --headless \
+  --enable_cameras
+```
+
+## Verification without Isaac Lab
 
 ```bash
 bash lab_01_foundations/scripts/run_phase_checks.sh
 ```
 
-## Run tests only
+This validates structure, runs the unit tests, and executes the deterministic mock backend using `configs/mock.yaml`.
+
+## Direct mock CLI
 
 ```bash
-python -m unittest discover -s lab_01_foundations/tests -p 'test_*.py'
+python3 -m lab_01_foundations.src.main \
+  --mock-runtime \
+  --config lab_01_foundations/configs/mock.yaml \
+  --output-dir /tmp/lab_01_mock_run
 ```
 
-## Direct CLI usage
+## Outputs
 
-```bash
-python -m lab_01_foundations.src.main \
-  --config lab_01_foundations/configs/dev.json \
-  --output lab_01_foundations/data/run_summary.json \
-  --trajectory-output lab_01_foundations/data/trajectory.csv \
-  --save-trajectory
-```
+- `run_summary.json`
+- `joint_states.csv`
+- `frames/frame_000.png` ... `frames/frame_029.png` for the real local profile
 
-## Notes
+## Asset note
 
-- JSON config support is built-in.
-- YAML config support is optional and requires `pyyaml`.
+The default local config points at Isaac Nucleus assets using `${ISAAC_NUCLEUS_DIR}`:
+
+- `Environments/Simple_Warehouse/warehouse.usd`
+- `Robots/UniversalRobots/ur5e/ur5e.usd`
+
+Run this lab from the Isaac Lab environment so those assets resolve correctly.

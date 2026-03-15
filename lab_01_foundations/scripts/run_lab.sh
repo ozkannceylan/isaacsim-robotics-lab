@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-python -m lab_01_foundations.src.main \
-  --config lab_01_foundations/configs/default.json \
-  --output lab_01_foundations/data/run_summary.json \
-  --trajectory-output lab_01_foundations/data/trajectory.csv \
-  --save-trajectory
+if ! command -v isaaclab >/dev/null 2>&1; then
+  echo "isaaclab command not found. Activate the Isaac Lab environment before running Lab 01."
+  exit 1
+fi
+
+isaaclab -p lab_01_foundations/foundations_standalone.py \
+  --config lab_01_foundations/configs/local.yaml \
+  --headless \
+  --enable_cameras \
+  "$@"

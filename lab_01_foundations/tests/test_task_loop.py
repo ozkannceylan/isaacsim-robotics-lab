@@ -1,35 +1,26 @@
 import unittest
-from pathlib import Path
 
-from lab_01_foundations.src.models import SimulationContext
-from lab_01_foundations.src.task_loop import run_task_loop
+from lab_01_foundations.src.control import compute_capture_steps, generate_joint_targets
 
 
-class TestTaskLoop(unittest.TestCase):
-    def test_run_task_loop_returns_expected_fields(self) -> None:
-        context = SimulationContext(
-            robot_model_path=Path("lab_01_foundations/models/robot.usd"),
-            environment_model_path=Path("lab_01_foundations/models/environment.usd"),
-            max_steps=10,
-            time_step=0.1,
-            seed=1,
+class TestControl(unittest.TestCase):
+    def test_capture_steps_cover_requested_frame_count(self) -> None:
+        capture_steps = compute_capture_steps(300, 30)
+        self.assertEqual(len(capture_steps), 30)
+        self.assertEqual(capture_steps[0], 9)
+        self.assertEqual(capture_steps[-1], 299)
+        self.assertEqual(len(set(capture_steps)), 30)
+
+    def test_generate_joint_targets_returns_one_value_per_joint(self) -> None:
+        targets = generate_joint_targets(
+            base_positions=(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+            amplitudes_rad=(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+            phase_offsets_rad=(0.0, 0.1, 0.2, 0.3, 0.4, 0.5),
+            frequency_hz=0.25,
+            time_s=1.0,
         )
-        summary = run_task_loop(context)
-        self.assertEqual(summary["status"], "success")
-        self.assertEqual(summary["steps_executed"], 10)
-        self.assertEqual(summary["simulated_time"], 1.0)
-        self.assertEqual(summary["seed"], 1)
-
-    def test_trajectory_collection(self) -> None:
-        context = SimulationContext(
-            robot_model_path=Path("lab_01_foundations/models/robot.usd"),
-            environment_model_path=Path("lab_01_foundations/models/environment.usd"),
-            max_steps=5,
-            time_step=0.1,
-            seed=2,
-        )
-        summary = run_task_loop(context, collect_trajectory=True)
-        self.assertEqual(len(summary["trajectory"]), 5)
+        self.assertEqual(len(targets), 6)
+        self.assertTrue(all(isinstance(value, float) for value in targets))
 
 
 if __name__ == "__main__":
