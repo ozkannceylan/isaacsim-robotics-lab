@@ -11,6 +11,7 @@ Lab 3 was completed using the same workflow as prior labs: PLAN → ARCHITECTURE
 ## What Didn't Work
 - Placeholder camera model is enough for scaffold validation only.
 - Current synthetic sensor model is simplistic and not physics-based.
+- Shell scripts that assume `python` exists are brittle on this machine; `python3` is the safe default here.
 
 ## Open Questions
 - Should Lab 3 include depth/rgb channels with separate feature heads?

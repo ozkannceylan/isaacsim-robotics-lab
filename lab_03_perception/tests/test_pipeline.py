@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from csv import DictReader
 from pathlib import Path
 
 from lab_03_perception.src.config_loader import load_config
@@ -26,6 +27,9 @@ class TestPipeline(unittest.TestCase):
             self.assertEqual(payload["status"], "success")
             self.assertEqual(payload["num_frames"], 10)
             self.assertTrue(features_path.exists())
+            with features_path.open("r", encoding="utf-8", newline="") as handle:
+                rows = list(DictReader(handle))
+            self.assertEqual(len(rows), 10)
 
 
 if __name__ == "__main__":
