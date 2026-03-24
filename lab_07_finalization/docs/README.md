@@ -18,7 +18,7 @@ bash lab_07_finalization/scripts/run_phase_checks.sh
 ## Run tests only
 
 ```bash
-python -m unittest discover -s lab_07_finalization/tests -p 'test_*.py'
+python3 -m unittest discover -s lab_07_finalization/tests -p 'test_*.py'
 ```
 
 ## Outputs

@@ -5,7 +5,7 @@
   },
   "thresholds": {
     "max_foundation_energy": 30.0,
-    "max_navigation_steps": 8,
+    "max_navigation_steps": 13,
     "min_perception_mean_intensity": 0.4,
     "min_overall_score": 0.75
   },

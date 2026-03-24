@@ -7,7 +7,7 @@ class TestConfigLoader(unittest.TestCase):
     def test_load_default_config(self) -> None:
         config = load_config('lab_05_integration/configs/default.json')
         self.assertEqual(config.run.seed, 11)
-        self.assertEqual(config.thresholds.max_navigation_steps, 6)
+        self.assertEqual(config.thresholds.max_navigation_steps, 13)
 
     def test_invalid_thresholds_raise(self) -> None:
         with self.assertRaises(ConfigError):

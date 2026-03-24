@@ -1,0 +1,11 @@
+path,exists,type
+README.md,True,file
+CLAUDE.md,True,file
+plan/MASTER_PLAN.md,True,file
+lab_01_foundations,True,dir
+lab_02_navigation,True,dir
+lab_03_perception,True,dir
+lab_04_domain_rand,True,dir
+lab_05_integration,True,dir
+lab_06_operations,True,dir
+lab_07_finalization,True,dir
