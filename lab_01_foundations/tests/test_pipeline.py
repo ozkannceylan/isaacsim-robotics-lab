@@ -1,41 +1,29 @@
 import json
 import tempfile
 import unittest
-from csv import DictReader
 from pathlib import Path
 
-from lab_01_foundations.src.foundations_standalone import main
+from lab_01_foundations.src.config_loader import load_config
+from lab_01_foundations.src.logging_utils import write_run_summary, write_trajectory_csv
+from lab_01_foundations.src.simulation_setup import initialize_simulation
+from lab_01_foundations.src.task_loop import run_task_loop
 
 
 class TestPipeline(unittest.TestCase):
-    def test_mock_runtime_writes_expected_artifacts(self) -> None:
+    def test_end_to_end_outputs(self) -> None:
+        config = load_config("lab_01_foundations/configs/dev.json")
+        context = initialize_simulation(config, project_root=Path.cwd())
+        summary = run_task_loop(context, collect_trajectory=True)
+
         with tempfile.TemporaryDirectory() as tmp:
             tmpdir = Path(tmp)
-            exit_code = main(
-                [
-                    "--mock-runtime",
-                    "--config",
-                    "lab_01_foundations/configs/mock.yaml",
-                    "--output-dir",
-                    str(tmpdir),
-                ]
-            )
-            self.assertEqual(exit_code, 0)
+            summary_path = write_run_summary(summary, tmpdir / "summary.json")
+            traj_path = write_trajectory_csv(summary, tmpdir / "trajectory.csv")
 
-            summary_path = tmpdir / "run_summary.json"
-            csv_path = tmpdir / "joint_states.csv"
-            frames = sorted((tmpdir / "frames").glob("*.png"))
             data = json.loads(summary_path.read_text(encoding="utf-8"))
             self.assertEqual(data["status"], "success")
-            self.assertEqual(data["runtime_name"], "mock")
-            self.assertEqual(data["step_count"], 30)
-            self.assertEqual(data["captured_frame_count"], 3)
-            self.assertEqual(len(frames), 3)
-            self.assertEqual(frames[0].read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
-
-            with csv_path.open("r", encoding="utf-8", newline="") as handle:
-                rows = list(DictReader(handle))
-            self.assertEqual(len(rows), 30)
+            self.assertEqual(data["steps_executed"], 25)
+            self.assertTrue(traj_path.exists())
 
 
 if __name__ == "__main__":

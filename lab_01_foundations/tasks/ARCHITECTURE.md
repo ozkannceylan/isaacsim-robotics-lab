@@ -4,92 +4,80 @@
 
 ## 1) Module Map
 
-- `lab_01_foundations/foundations_standalone.py`
-  - Purpose: file entrypoint used by `isaaclab -p`.
-  - Responsibility: add repo root to `sys.path` and hand off to the Python package entrypoint.
-
-- `lab_01_foundations/config/`
-  - `scene_cfg.py` — typed scene configuration for warehouse, UR5e, table, and camera.
-  - `sim_cfg.py` — runtime and artifact output configuration.
-
 - `lab_01_foundations/src/`
-  - Purpose: core Lab 01 runtime logic.
+  - Purpose: core python modules for Lab 1 logic.
   - Implemented modules:
-    - `main.py` — compatibility module that forwards to the standalone runner.
-    - `foundations_standalone.py` — CLI orchestration, backend selection, and artifact writing.
-    - `config_loader.py` — YAML/JSON loading plus Lab 01 contract validation.
-    - `control.py` — joint trajectory generation and frame capture schedule.
-    - `isaaclab_runtime.py` — real Isaac Lab execution path.
-    - `mock_runtime.py` — deterministic CI/local validation backend.
-    - `artifact_writers.py` — CSV, PNG, and summary JSON writers.
-    - `models.py` — typed run-result models.
+    - `models.py` — typed dataclasses for config and simulation context.
+    - `main.py` — top-level entrypoint.
+    - `config_loader.py` — config parsing/validation.
+    - `simulation_setup.py` — simulation bootstrap and asset loading.
+    - `task_loop.py` — deterministic per-step control/update loop.
+    - `logging_utils.py` — summary and trajectory artifact writers.
 
 - `lab_01_foundations/configs/`
-  - Purpose: run profiles.
-  - Files:
-    - `local.yaml` — plan-aligned capstone profile (300 steps, 30 PNG frames, 640x480 RGB).
-    - `mock.yaml` — reduced validation profile for tests and phase checks.
+  - Purpose: runtime configuration files (e.g., yaml/json) for environment and parameters.
 
 - `lab_01_foundations/models/`
-  - Purpose: optional local USD asset storage if Nucleus references are replaced later.
+  - Purpose: robot/environment model assets or references (URDF/USD/etc.).
 
 - `lab_01_foundations/data/`
-  - Purpose: generated run artifacts.
+  - Purpose: generated run data, cached artifacts, or sample inputs.
 
 - `lab_01_foundations/scripts/`
-  - Purpose: real run, structure validation, and mock verification.
+  - Purpose: helper scripts for launching, formatting, and validation.
 
 - `lab_01_foundations/tests/`
-  - Purpose: config, trajectory, and artifact-contract verification.
+  - Purpose: unit/integration tests for baseline modules.
 
 - `lab_01_foundations/docs/`
-  - Purpose: Lab 01 runbook and plan-alignment notes.
+  - Purpose: lab usage notes and onboarding docs.
 
 - `lab_01_foundations/tasks/`
-  - Purpose: task tracking and retrospective notes.
+  - Purpose: planning artifacts (`PLAN.md`, `ARCHITECTURE.md`, `TODO.md`, `LESSONS.md`).
 
 ## 2) Data Flow
 
-1. User invokes `isaaclab -p lab_01_foundations/foundations_standalone.py --config ... --headless --enable_cameras`.
-2. `config_loader` parses YAML and validates the Lab 01 capstone contract.
-3. `foundations_standalone.py` selects either the real Isaac Lab backend or the mock backend.
-4. The selected runtime emits typed joint-state samples and camera frames.
-5. `artifact_writers.py` persists `joint_states.csv`, PNG frames, and `run_summary.json`.
+1. User/runner invokes entrypoint (`src/main.py`) with config path.
+2. `config_loader` reads and validates config schema.
+3. `simulation_setup` initializes scene, robot assets, and optional sensors from `models/` references.
+4. `task_loop` executes control/simulation steps and emits metrics/logs.
+5. Outputs are written to `data/` and summarized by `logging_utils`.
 
 ## 3) Key Interfaces
 
 - **Config interface**
-  - Input: path to `configs/local.yaml` or `configs/mock.yaml`.
-  - Output: `Lab01Config`.
-  - Errors: missing sections, non-headless runtime, bad joint definitions, bad frame/step counts.
+  - Input: path to config file under `configs/`.
+  - Output: validated in-memory config object/dict.
+  - Errors: schema violations, missing model references.
 
-- **Runtime interface**
-  - Input: validated config + runtime mode.
-  - Output: `LabRunResult`.
-  - Real backend: launches Isaac Lab and records actual robot/camera outputs.
-  - Mock backend: validates the same output contract without Isaac Lab.
+- **Simulation setup interface**
+  - Input: validated config + model paths.
+  - Output: initialized simulation context/handles.
 
-- **Artifact interface**
-  - Input: `LabRunResult`.
-  - Output: summary JSON, joint-state CSV, PNG frame sequence.
+- **Task loop interface**
+  - Input: sim context + task parameters.
+  - Output: run status, performance metrics, optional trajectory data.
+
+- **Logging/metrics interface**
+  - Input: structured events and scalar metrics.
+  - Output: human-readable logs + machine-readable summary artifact.
 
 ## 4) Model and File Expectations
 
-- Config files expected under `configs/`:
-  - `local.yaml` — the real capstone profile.
-  - `mock.yaml` — reduced validation profile.
+- Model files expected under `models/`:
+  - Robot model (e.g., `robot.urdf` or `robot.usd`).
+  - Environment model (e.g., floor/obstacle world asset).
 
-- External USD assets expected from Isaac Nucleus by default:
-  - `${ISAAC_NUCLEUS_DIR}/Environments/Simple_Warehouse/warehouse.usd`
-  - `${ISAAC_NUCLEUS_DIR}/Robots/UniversalRobots/ur5e/ur5e.usd`
+- Config files expected under `configs/`:
+  - `default.yaml` (base runtime parameters).
+  - `dev.yaml` (local overrides).
 
 - Output files expected under `data/`:
-  - `run_summary.json`
-  - `joint_states.csv`
-  - `frames/frame_XXX.png`
+  - `run_summary.json` (metrics, duration, status).
+  - Optional per-step logs/trajectory artifacts.
 
 ## 5) Non-Functional Baseline
 
-- Headless-only on the local profile.
-- Real Isaac Lab path and fast mock-validation path share the same artifact contract.
-- Pure-stdlib PNG writing keeps tests independent of Pillow/OpenCV.
+- Deterministic startup path via explicit config.
+- Clear separation between config, setup, runtime loop, and logging.
+- Testable interfaces with minimal cross-module coupling.

@@ -22,8 +22,6 @@
 - [x] Run structure checks.
 - [x] Run tests.
 - [x] Run end-to-end command.
-- [x] Fix local scripts to use `python3` so the one-command check actually works in this workspace.
-- [x] Validate deterministic planner behavior with repeated-run test coverage.
 
 ## Phase 3 — Completion & Handoff
 - [x] Confirm Lab 2 is complete for current scaffold scope.

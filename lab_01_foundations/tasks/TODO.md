@@ -4,22 +4,36 @@
 - [x] Done
 - [ ] Pending
 
-## Review Against `plan/lab_01_foundations.md`
-- [x] Confirm the prior Lab 01 scaffold did not launch Isaac Sim, spawn UR5e, capture camera frames, or use `isaaclab -p`.
-- [x] Replace placeholder runtime logic with a real Isaac Lab standalone entrypoint.
+## Phase 0 — Planning
+- [x] Create `lab_01_foundations/` root folder.
+- [x] Create required subfolders: `tasks/`, `src/`, `configs/`, `models/`, `data/`, `scripts/`, `tests/`, `docs/`.
+- [x] Draft `tasks/PLAN.md` with concrete implementation steps.
+- [x] Draft `tasks/ARCHITECTURE.md` including module map, data flow, interfaces, and model file expectations.
+- [x] Create `tasks/TODO.md` and keep statuses synchronized with current progress.
+- [x] Create `tasks/LESSONS.md` template scaffold.
 
-## Runtime Implementation
-- [x] Add typed config models for runtime, scene, and output artifacts.
-- [x] Encode the plan-aligned local profile: headless, 300 steps, 30 PNG frames, 640x480 RGB.
-- [x] Implement the UR5e sine-wave joint trajectory logic.
-- [x] Implement real Isaac Lab scene assembly for warehouse, table, UR5e, and camera.
-- [x] Write joint states to CSV and captured RGB frames to PNG.
+## Phase 1 — Baseline Scaffold
+- [x] Add initial code skeletons in `src/` based on architecture.
+- [x] Add baseline config files in `configs/`.
+- [x] Add model placeholders/references in `models/`.
+- [x] Add minimal validation/launch scripts in `scripts/`.
+- [x] Add initial tests for config loading and module wiring.
+- [x] Add docs for how to run Lab 1 locally.
 
-## Verification Path
-- [x] Add a deterministic mock backend that preserves the artifact contract.
-- [x] Update the scripts to use `python3` for local verification where Isaac Lab is unavailable.
-- [x] Add unit tests for config validation, capture scheduling, and mock artifact generation.
-- [x] Update the phase-check script to run structure checks, tests, and the mock backend.
+## Phase 2 — Runtime Hardening
+- [x] Introduce typed runtime/config models.
+- [x] Strengthen config validation (value bounds + required keys).
+- [x] Add deterministic control-loop metric generation with seed support.
+- [x] Add trajectory export support.
 
-## Remaining
-- [ ] Execute the real Isaac Lab run in a configured environment and confirm the UR5e asset behaves as expected.
+## Phase 3 — Verification
+- [x] Add end-to-end pipeline test for config -> setup -> loop -> outputs.
+- [x] Add one-command phase checks script (`run_phase_checks.sh`).
+- [x] Validate default run emits summary and trajectory artifacts.
+
+## Phase 4 — Documentation and Retrospective
+- [x] Update docs with phase-oriented runbook and CLI usage.
+- [x] Log implementation issues/open questions in `tasks/LESSONS.md`.
+
+## Risks / Blockers
+- [x] Canonical planning docs are present (`plan/lab_01_foundations.md`, `plan/MASTER_PLAN.md`, `CLAUDE.md`).

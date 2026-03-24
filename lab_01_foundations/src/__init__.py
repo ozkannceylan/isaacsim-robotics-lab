@@ -1,1 +1,1 @@
-"""Runtime helpers for the Lab 01 foundations capstone."""
+"""Lab 01 foundations package."""

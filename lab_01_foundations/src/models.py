@@ -1,39 +1,39 @@
-"""Typed runtime models for Lab 01 artifact generation."""
+"""Typed models for Lab 01 configuration and runtime state."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Mapping
+from pathlib import Path
 
 
 @dataclass(frozen=True)
-class JointStateRecord:
-    """Single-step joint command and state sample."""
-
-    step: int
-    sim_time_s: float
-    joint_targets_rad: tuple[float, ...]
-    joint_positions_rad: tuple[float, ...]
-    joint_velocities_rad_s: tuple[float, ...]
+class RunConfig:
+    max_steps: int = 100
+    seed: int = 0
 
 
 @dataclass(frozen=True)
-class CapturedFrame:
-    """Captured RGB frame encoded as packed 8-bit RGB bytes."""
-
-    frame_index: int
-    step: int
-    width: int
-    height: int
-    rgb_bytes: bytes
+class SimulationConfig:
+    time_step: float = 0.01
 
 
 @dataclass(frozen=True)
-class LabRunResult:
-    """Complete artifact payload for a Lab 01 execution."""
+class ModelConfig:
+    robot: str = "lab_01_foundations/models/robot.usd"
+    environment: str = "lab_01_foundations/models/environment.usd"
 
-    runtime_name: str
-    joint_names: tuple[str, ...]
-    joint_state_records: tuple[JointStateRecord, ...]
-    captured_frames: tuple[CapturedFrame, ...]
-    metadata: Mapping[str, object]
+
+@dataclass(frozen=True)
+class LabConfig:
+    run: RunConfig
+    simulation: SimulationConfig
+    models: ModelConfig
+
+
+@dataclass(frozen=True)
+class SimulationContext:
+    robot_model_path: Path
+    environment_model_path: Path
+    time_step: float
+    max_steps: int
+    seed: int

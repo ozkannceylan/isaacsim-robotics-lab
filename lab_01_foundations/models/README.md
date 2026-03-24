@@ -1,9 +1,8 @@
-# Model References
+# Model Placeholders
 
-Lab 01 now uses Isaac Nucleus asset references from `lab_01_foundations/configs/local.yaml` instead of checked-in placeholder USD files.
+This folder contains placeholder model assets for Lab 01 foundations.
 
-The `models/` folder remains available if you later decide to pin local USD assets for:
+- `robot.usd`: placeholder robot model reference.
+- `environment.usd`: placeholder environment/world reference.
 
-- the UR5e robot
-- custom warehouse variants
-- alternative table or camera rig assets
+Replace these placeholders with canonical assets once lab briefs are available.

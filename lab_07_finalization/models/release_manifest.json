@@ -1,0 +1,14 @@
+{
+  "release_name": "isaacsim_robotics_lab_final",
+  "required_paths": [
+    "README.md",
+    "CLAUDE.md",
+    "plan/MASTER_PLAN.md",
+    "lab_01_foundations",
+    "lab_02_navigation",
+    "lab_03_perception",
+    "lab_05_integration",
+    "lab_06_operations",
+    "lab_07_finalization"
+  ]
+}

@@ -1,27 +1,27 @@
 # Lessons Learned
 
 ## Context
-Lab 01 needed a full correction pass because the original repo content was a generic scaffold rather than the actual Isaac Sim foundations capstone described in `plan/lab_01_foundations.md`.
+Lab 1 completion executed in phases after plan/architecture approval.
 
 ## Step Log
-1. Reviewed the existing Lab 01 implementation against the plan and identified that it never launched Isaac Sim or produced the required artifacts.
-2. Replaced the placeholder loop with a real standalone Isaac Lab runner.
-3. Added a mock backend so the artifact contract can still be tested in environments without Isaac Lab installed.
-4. Switched the lab configs to YAML and encoded the real 300-step and 30-frame targets explicitly.
+1. Completed Phase 1 code scaffold (`src/`, configs, models, scripts, tests, docs).
+2. Completed Phase 2 hardening (typed models, stricter config checks, seeded loop metrics, trajectory export).
+3. Completed Phase 3 verification (pipeline test + one-command check script).
+4. Completed Phase 4 documentation refresh and retrospective update.
 
 ## What Worked
-- Separating the real Isaac Lab backend from the mock backend kept the entrypoint clean and testable.
-- Pure-stdlib PNG writing avoids adding image dependencies just to validate the frame output contract.
-- Encoding Isaac Nucleus asset references in config is clearer than committing fake USD placeholders.
+- Typed dataclasses reduced ambiguity between config parsing and runtime setup.
+- Seeded loop behavior made output deterministic and test-friendly.
+- `run_phase_checks.sh` simplifies local validation and future CI wiring.
 
 ## What Didn't Work
-- The previous placeholder implementation gave a false sense of completion while missing every capstone requirement that mattered.
-- This workspace does not currently include the `isaaclab` command, so the real simulation path could not be executed here.
+- Canonical brief files are still absent from this repo snapshot.
+- Placeholder model assets are sufficient for scaffold tests but not for real simulation quality checks.
 
 ## Open Questions
-- Does the local Isaac Lab environment already expose the UR5e Nucleus asset exactly at `${ISAAC_NUCLEUS_DIR}/Robots/UniversalRobots/ur5e/ur5e.usd`?
-- Does the chosen UR5e USD expose only the six arm joints, or is a narrower actuator regex needed after the first live run?
+- Should output schema include additional metrics (latency, control error, episode score)?
+- What canonical asset set should replace `robot.usd` and `environment.usd` placeholders?
 
 ## Follow-up Actions
-- Run `bash lab_01_foundations/scripts/run_lab.sh` inside the real Isaac Lab environment and inspect the generated CSV/PNG artifacts.
-- If the UR5e USD layout differs locally, update only the asset path and arm-joint targeting logic in `configs/local.yaml` and `src/isaaclab_runtime.py`.
+- Replace placeholder models with official Lab 1 assets when available.
+- Align config schema and module boundaries with canonical lab brief once provided.

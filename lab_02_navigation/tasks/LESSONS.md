@@ -11,7 +11,6 @@ Lab 2 was completed after Lab 1 using the same ordered workflow: PLAN → ARCHIT
 
 ## What Didn't Work
 - Placeholder map is enough for scaffold tests only; no obstacle logic yet.
-- Shell scripts that assume `python` exists are brittle on this machine; `python3` is the safe default here.
 
 ## Open Questions
 - Should Lab 2 planner become obstacle-aware (A*/Dijkstra) in next iteration?
