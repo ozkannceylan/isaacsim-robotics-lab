@@ -1,0 +1,13 @@
+{
+  "run": {
+    "max_steps": 25,
+    "seed": 7
+  },
+  "simulation": {
+    "time_step": 0.02
+  },
+  "models": {
+    "robot": "lab_01_foundations/models/robot.usd",
+    "environment": "lab_01_foundations/models/environment.usd"
+  }
+}

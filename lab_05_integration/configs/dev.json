@@ -1,0 +1,18 @@
+{
+  "run": {
+    "seed": 5,
+    "scoreboard_name": "dev_scoreboard.csv"
+  },
+  "thresholds": {
+    "max_foundation_energy": 30.0,
+    "max_navigation_steps": 8,
+    "min_perception_mean_intensity": 0.4,
+    "min_overall_score": 0.75
+  },
+  "inputs": {
+    "integration_manifest": "lab_05_integration/models/integration_manifest.json",
+    "lab_01_config": "lab_01_foundations/configs/dev.json",
+    "lab_02_config": "lab_02_navigation/configs/dev.json",
+    "lab_03_config": "lab_03_perception/configs/dev.json"
+  }
+}

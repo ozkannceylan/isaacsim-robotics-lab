@@ -1,0 +1,14 @@
+{
+  "run": {
+    "seed": 13,
+    "audit_name": "dev_repo_audit.csv"
+  },
+  "thresholds": {
+    "minimum_final_score": 0.75,
+    "minimum_repo_completeness": 1.0
+  },
+  "inputs": {
+    "release_manifest": "lab_07_finalization/models/release_manifest.json",
+    "lab_06_config": "lab_06_operations/configs/dev.json"
+  }
+}
