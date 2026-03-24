@@ -1,0 +1,60 @@
+{
+  "status": "final_ready",
+  "release_name": "isaacsim_robotics_lab_final",
+  "final_score": 1.0,
+  "operations_status": "ready",
+  "repo_completeness": 1.0,
+  "audit_rows": [
+    {
+      "path": "README.md",
+      "exists": true,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "exists": true,
+      "type": "file"
+    },
+    {
+      "path": "plan/MASTER_PLAN.md",
+      "exists": true,
+      "type": "file"
+    },
+    {
+      "path": "lab_01_foundations",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_02_navigation",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_03_perception",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_04_domain_rand",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_05_integration",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_06_operations",
+      "exists": true,
+      "type": "dir"
+    },
+    {
+      "path": "lab_07_finalization",
+      "exists": true,
+      "type": "dir"
+    }
+  ],
+  "recommended_next_step": "tag_release"
+}

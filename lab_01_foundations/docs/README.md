@@ -23,13 +23,13 @@ bash lab_01_foundations/scripts/run_phase_checks.sh
 ## Run tests only
 
 ```bash
-python -m unittest discover -s lab_01_foundations/tests -p 'test_*.py'
+python3 -m unittest discover -s lab_01_foundations/tests -p 'test_*.py'
 ```
 
 ## Direct CLI usage
 
 ```bash
-python -m lab_01_foundations.src.main \
+python3 -m lab_01_foundations.src.main \
   --config lab_01_foundations/configs/dev.json \
   --output lab_01_foundations/data/run_summary.json \
   --trajectory-output lab_01_foundations/data/trajectory.csv \
