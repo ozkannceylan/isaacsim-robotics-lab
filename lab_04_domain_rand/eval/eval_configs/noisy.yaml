@@ -1,0 +1,6 @@
+name: noisy
+mass_multiplier: 1.0
+friction_override: null
+observation_noise_scale: 3.0
+external_force_scale: 1.0
+allowed_object_types: [cube, cylinder, sphere]

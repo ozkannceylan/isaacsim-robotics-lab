@@ -1,0 +1,6 @@
+name: slippery
+mass_multiplier: 1.0
+friction_override: 0.3
+observation_noise_scale: 1.0
+external_force_scale: 1.2
+allowed_object_types: [cube, cylinder, sphere]
