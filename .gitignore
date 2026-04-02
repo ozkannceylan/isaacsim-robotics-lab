@@ -1,2 +1,43 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Isaac Sim / Isaac Lab (cloned separately on instance)
+IsaacLab/
+miniconda3/
+
+# Training outputs
 outputs/
+logs/
+checkpoints/
+runs/
+
+# Model exports
+*.onnx
+
+# Large media (keep .gitkeep in media dirs)
+media/*.mp4
+media/*.avi
+media/*.png
+media/*.jpg
+!media/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+*.key

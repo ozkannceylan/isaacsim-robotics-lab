@@ -1,9 +1,0 @@
-Structure validation passed.
-......
-----------------------------------------------------------------------
-Ran 6 tests in 0.002s
-
-OK
-Run complete. Summary written to: lab_01_foundations/data/run_summary.json
-Trajectory written to: lab_01_foundations/data/trajectory.csv
-All Lab 1 phase checks completed.

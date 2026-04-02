@@ -1,7 +1,0 @@
-{
-  "run": {"max_steps": 200, "seed": 42},
-  "planner": {"step_size": 1.0},
-  "models": {"map_file": "lab_02_navigation/models/map.json"},
-  "start": [0.0, 0.0],
-  "goal": [10.0, 8.0]
-}
