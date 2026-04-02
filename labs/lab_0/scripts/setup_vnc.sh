@@ -127,10 +127,11 @@ XSTARTUP
 chmod +x "$HOME/.vnc/xstartup"
 
 # Start VNC server with VirtualGL support
+# Note: security type flag varies by TurboVNC version.
+# Omit -securitytypes to use default (password-based auth via ~/.vnc/passwd).
 /opt/TurboVNC/bin/vncserver "$VNC_DISPLAY" \
     -geometry 1920x1080 \
-    -depth 24 \
-    -securitytypes VncAuth
+    -depth 24
 ok "VNC server running on port $VNC_PORT"
 
 # ---------------------------------------------------------------------------

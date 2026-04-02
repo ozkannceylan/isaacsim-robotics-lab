@@ -92,7 +92,7 @@ else
 fi
 
 # Disk space check
-FREE_GB=$(df -BG --output=avail "$HOME" | tail -1 | tr -dc '0-9')
+FREE_GB=$(df -BG "$HOME" | tail -1 | awk '{print $4}' | tr -dc '0-9')
 if (( FREE_GB < 50 )); then
     warn "Only ${FREE_GB}GB free disk space. Isaac Sim needs ~50GB+. Consider freeing space."
 else
@@ -128,6 +128,12 @@ if ! grep -q "conda initialize" "$HOME/.bashrc" 2>/dev/null; then
 else
     ok "Conda already initialized for bash"
 fi
+
+# Accept Anaconda TOS (required since mid-2025, non-interactive)
+log "Accepting Anaconda Terms of Service..."
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main 2>&1 | tee -a "$LOG_FILE" || true
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r 2>&1 | tee -a "$LOG_FILE" || true
+ok "Anaconda TOS accepted"
 
 # ---------------------------------------------------------------------------
 # Step 3: Create conda environment
