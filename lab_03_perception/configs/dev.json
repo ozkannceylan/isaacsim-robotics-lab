@@ -1,5 +1,0 @@
-{
-  "run": {"num_frames": 10, "seed": 7},
-  "sensor": {"width": 32, "height": 24, "noise_level": 0.02},
-  "models": {"camera_model_file": "lab_03_perception/models/camera.json"}
-}
