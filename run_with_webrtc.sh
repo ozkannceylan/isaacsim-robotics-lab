@@ -5,6 +5,8 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
 TARGET_SCRIPT="${ISAACLAB_WEBRTC_TARGET:-$ROOT_DIR/labs/lab_1/scripts/train_cartpole.sh}"
 LIVESTREAM_MODE="${ISAACLAB_LIVESTREAM:-2}"
+CONDA_SH="${CONDA_SH:-/opt/conda/etc/profile.d/conda.sh}"
+CONDA_ENV_NAME="${CONDA_ENV_NAME:-isaaclab}"
 
 if [[ $# -gt 0 && "$1" != -* ]]; then
     CANDIDATE="$1"
@@ -24,6 +26,27 @@ if [[ ! -f "$TARGET_SCRIPT" ]]; then
     exit 1
 fi
 
+# Ensure the Isaac Lab conda environment is active before invoking Python.
+if [[ -f "$CONDA_SH" ]]; then
+    # shellcheck disable=SC1090
+    source "$CONDA_SH"
+    conda activate "$CONDA_ENV_NAME"
+fi
+
+# Repair Isaac Lab core package if only namespace packages are present.
+if ! python -c "from isaaclab.app import AppLauncher" >/dev/null 2>&1; then
+    echo "[WARN] isaaclab.app import failed. Reinstalling core package..."
+    if [[ -d "$ISAACLAB_DIR/source/isaaclab" ]]; then
+        (
+            cd "$ISAACLAB_DIR/source/isaaclab"
+            pip install --no-cache-dir -e . --no-build-isolation
+        )
+    else
+        echo "[ERROR] Isaac Lab source not found at $ISAACLAB_DIR/source/isaaclab" >&2
+        exit 1
+    fi
+fi
+
 export HEADLESS=1
 export ISAACLAB_LIVESTREAM="$LIVESTREAM_MODE"
 
@@ -31,6 +54,12 @@ echo "=== Isaac Lab WebRTC Launch ==="
 echo "  Target:      $TARGET_SCRIPT"
 echo "  Headless:    1"
 echo "  Livestream:  $LIVESTREAM_MODE"
+echo ""
+echo "  After launch, access the stream at:"
+echo "    http://localhost:8211/streaming/webrtc-client"
+echo ""
+echo "  (Requires SSH tunnel — run ./generate_tunnel_cmd.sh on the instance"
+echo "   and copy the command to your local terminal.)"
 echo ""
 
 case "$TARGET_SCRIPT" in

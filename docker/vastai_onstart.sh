@@ -28,6 +28,44 @@ source /opt/conda/etc/profile.d/conda.sh
 conda activate isaaclab
 
 # ---------------------------------------------------------------------------
+# Isaac Lab environment defaults (persist across all SSH sessions)
+# ---------------------------------------------------------------------------
+cat > /etc/profile.d/isaaclab_env.sh << 'ENVEOF'
+export HEADLESS=1
+export ISAACLAB_LIVESTREAM=2
+ENVEOF
+chmod +x /etc/profile.d/isaaclab_env.sh
+export HEADLESS=1
+export ISAACLAB_LIVESTREAM=2
+echo "[OK]   Set HEADLESS=1, ISAACLAB_LIVESTREAM=2 (WebRTC)" | tee -a "$LOG"
+
+# ---------------------------------------------------------------------------
+# Repair Isaac Lab core package if only namespace packages are present
+#
+# Some images end up with isaaclab sub-packages installed but not the core
+# editable package. In that case `isaaclab` resolves as a namespace package,
+# which breaks runtime inspection in AppLauncher-driven flows.
+# ---------------------------------------------------------------------------
+echo "[INFO] Verifying Isaac Lab core package..." | tee -a "$LOG"
+if python -c "from isaaclab.app import AppLauncher" >/dev/null 2>&1; then
+    echo "[OK]   isaaclab.app import works." | tee -a "$LOG"
+else
+    echo "[WARN] isaaclab.app import failed. Reinstalling core package..." | tee -a "$LOG"
+    if [[ -d "/opt/IsaacLab/source/isaaclab" ]]; then
+        cd /opt/IsaacLab/source/isaaclab
+        pip install --no-cache-dir -e . --no-build-isolation 2>&1 | tee -a "$LOG"
+        cd - >/dev/null
+        if python -c "from isaaclab.app import AppLauncher" >/dev/null 2>&1; then
+            echo "[OK]   isaaclab core package repaired." | tee -a "$LOG"
+        else
+            echo "[WARN] isaaclab.app import still failing after repair." | tee -a "$LOG"
+        fi
+    else
+        echo "[WARN] /opt/IsaacLab/source/isaaclab not found; cannot repair core package." | tee -a "$LOG"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
 # Clone or pull project repo
 # ---------------------------------------------------------------------------
 if [[ -d "$PROJECT_DIR/.git" ]]; then
