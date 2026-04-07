@@ -30,17 +30,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-ISAACLAB_DIR="${ISAACLAB_DIR:-$HOME/IsaacLab}"
-SCRIPT_DIR="$ISAACLAB_DIR/source/standalone/workflows/${FRAMEWORK}"
-
-case "$FRAMEWORK" in
-    rl_games)  TRAIN_SCRIPT="$SCRIPT_DIR/train.py" ;;
-    skrl)      TRAIN_SCRIPT="$SCRIPT_DIR/train.py" ;;
-    *)         echo "Unknown framework: $FRAMEWORK"; exit 1 ;;
-esac
+ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
+TRAIN_SCRIPT="$ISAACLAB_DIR/scripts/reinforcement_learning/${FRAMEWORK}/train.py"
 
 if [[ ! -f "$TRAIN_SCRIPT" ]]; then
     echo "Training script not found: $TRAIN_SCRIPT"
+    echo "Is ISAACLAB_DIR set correctly? Current: $ISAACLAB_DIR"
     exit 1
 fi
 
@@ -52,7 +47,7 @@ echo "  max_iterations: $MAX_ITERATIONS"
 echo "  Mode:           $([ -n "$HEADLESS" ] && echo 'headless' || echo 'GUI')"
 echo ""
 
-python "$TRAIN_SCRIPT" \
+bash "$ISAACLAB_DIR/isaaclab.sh" -p "$TRAIN_SCRIPT" \
     --task "$TASK" \
     --num_envs "$NUM_ENVS" \
     --max_iterations "$MAX_ITERATIONS" \

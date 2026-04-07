@@ -61,10 +61,10 @@ Lab 1 focuses on using Isaac Lab's built-in environments. No custom envs are cre
 
 | Path | Purpose |
 |------|---------|
-| `~/IsaacLab/source/isaaclab/isaaclab/envs/` | Environment base classes |
-| `~/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/` | Built-in task definitions |
-| `~/IsaacLab/source/standalone/workflows/` | Training scripts per RL framework |
-| `~/projects/isaacsim-robotics-lab/labs/lab_1/` | Our scripts and results |
+| `/opt/IsaacLab/source/isaaclab/isaaclab/envs/` | Environment base classes |
+| `/opt/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/` | Built-in task definitions |
+| `/opt/IsaacLab/scripts/reinforcement_learning/` | Training scripts per RL framework |
+| `/workspace/isaacsim-robotics-lab/labs/lab_1/` | Our scripts and results |
 
 ## Scripts in This Lab
 

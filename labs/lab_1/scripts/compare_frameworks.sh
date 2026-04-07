@@ -16,7 +16,7 @@ RESULTS_FILE="$LAB_DIR/src/framework_comparison.csv"
 TASK="Isaac-Cartpole-v0"
 NUM_ENVS=2048
 ITERATIONS=300
-ISAACLAB_DIR="${ISAACLAB_DIR:-$HOME/IsaacLab}"
+ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -41,7 +41,7 @@ echo ""
 echo "framework,task,num_envs,iterations,wall_time_sec" > "$RESULTS_FILE"
 
 for FW in "${FRAMEWORKS[@]}"; do
-    TRAIN_SCRIPT="$ISAACLAB_DIR/source/standalone/workflows/${FW}/train.py"
+    TRAIN_SCRIPT="$ISAACLAB_DIR/scripts/reinforcement_learning/${FW}/train.py"
 
     if [[ ! -f "$TRAIN_SCRIPT" ]]; then
         echo "  SKIP: $FW (script not found: $TRAIN_SCRIPT)"
@@ -51,7 +51,7 @@ for FW in "${FRAMEWORKS[@]}"; do
     echo "--- Training with $FW ---"
     START_TIME=$(date +%s.%N)
 
-    python "$TRAIN_SCRIPT" \
+    bash "$ISAACLAB_DIR/isaaclab.sh" -p "$TRAIN_SCRIPT" \
         --task "$TASK" \
         --num_envs "$NUM_ENVS" \
         --max_iterations "$ITERATIONS" \

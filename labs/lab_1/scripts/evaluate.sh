@@ -15,7 +15,7 @@ CHECKPOINT=""
 HEADLESS="--headless"
 VIDEO_ARGS=""
 NUM_ENVS=64
-ISAACLAB_DIR="${ISAACLAB_DIR:-$HOME/IsaacLab}"
+ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -35,7 +35,7 @@ if [[ -z "$TASK" ]] || [[ -z "$CHECKPOINT" ]]; then
     exit 1
 fi
 
-PLAY_SCRIPT="$ISAACLAB_DIR/source/standalone/workflows/${FRAMEWORK}/play.py"
+PLAY_SCRIPT="$ISAACLAB_DIR/scripts/reinforcement_learning/${FRAMEWORK}/play.py"
 
 if [[ ! -f "$PLAY_SCRIPT" ]]; then
     echo "Play script not found: $PLAY_SCRIPT"
@@ -52,7 +52,7 @@ echo "  Video:      $([ -n "$VIDEO_ARGS" ] && echo 'yes' || echo 'no')"
 echo ""
 
 # shellcheck disable=SC2086
-python "$PLAY_SCRIPT" \
+bash "$ISAACLAB_DIR/isaaclab.sh" -p "$PLAY_SCRIPT" \
     --task "$TASK" \
     --num_envs "$NUM_ENVS" \
     --checkpoint "$CHECKPOINT" \

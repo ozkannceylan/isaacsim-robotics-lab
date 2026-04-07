@@ -17,7 +17,7 @@ RESULTS_FILE="$LAB_DIR/src/benchmark_results.csv"
 ITERATIONS=100
 TASK="Isaac-Cartpole-v0"
 FRAMEWORK="rl_games"
-ISAACLAB_DIR="${ISAACLAB_DIR:-$HOME/IsaacLab}"
+ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -29,15 +29,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-TRAIN_SCRIPT="$ISAACLAB_DIR/source/standalone/workflows/${FRAMEWORK}/train.py"
+TRAIN_SCRIPT="$ISAACLAB_DIR/scripts/reinforcement_learning/${FRAMEWORK}/train.py"
 
 if [[ ! -f "$TRAIN_SCRIPT" ]]; then
     echo "Training script not found: $TRAIN_SCRIPT"
     exit 1
 fi
 
-# num_envs values to test
-ENV_COUNTS=(64 256 1024 2048 4096 8192)
+# num_envs values to test (min 512 for CartPole rl_games default minibatch_size)
+ENV_COUNTS=(512 1024 2048 4096 8192)
 
 echo "=== num_envs Throughput Benchmark ==="
 echo "  Task:       $TASK"
@@ -54,12 +54,12 @@ for N in "${ENV_COUNTS[@]}"; do
     START_TIME=$(date +%s.%N)
 
     # Run training, capture output
-    python "$TRAIN_SCRIPT" \
+    bash "$ISAACLAB_DIR/isaaclab.sh" -p "$TRAIN_SCRIPT" \
         --task "$TASK" \
         --num_envs "$N" \
         --max_iterations "$ITERATIONS" \
         --headless \
-        2>&1 | tail -5
+        2>&1 | tee /tmp/bench_${N}.log | tail -5
 
     END_TIME=$(date +%s.%N)
     ELAPSED=$(echo "$END_TIME - $START_TIME" | bc)
