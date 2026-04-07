@@ -88,27 +88,60 @@ Note: GUI mode requires Vulkan display. RTX 5090 has Vulkan ICD 1.4 vs system lo
 
 ---
 
+## Ant Locomotion Training
+
+### Setup
+- **Task:** Isaac-Ant-v0 (manager-based, 7 reward terms, 60-dim obs, 8-dim action)
+- **num_envs:** 2048
+- **max_iterations:** 1000
+- **Wall clock:** ~3 minutes
+- **GPU memory:** 3.4 GB (10.7% of RTX 5090)
+
+### Baseline Results
+- **Best reward:** 90.35 (epoch 840)
+- **Final reward:** 68.31 (epoch 1000)
+- **FPS total:** ~190-250K
+- **Convergence:** Yes. Steady climb from 3.27 (ep50) to 90.35 peak.
+
+---
+
 ## Ant Reward Experiments
 
-*To be filled after Phase 3.*
+3 experiments with modified reward weights, each trained for 500 iterations with 2048 envs.
 
-### Baseline (default config)
-- Final reward:
-- Episode length:
+### Summary Table
 
-### Experiment: 2x energy penalty
-- Final reward:
-- Episode length:
-- Observation:
+| Experiment | Config Change | Best Reward | Final (ep500) | vs Baseline |
+|------------|--------------|-------------|---------------|-------------|
+| **baseline** | (default) | 90.35 | 68.31 | -- |
+| **high_energy** | action_l2: -0.01, energy: -0.1 | 46.18 | 38.57 | -49% |
+| **no_alive** | alive: 0.0 | 65.33 | 54.33 | -28% |
+| **high_velocity** | progress: 2.0 | 169.26 | 151.60 | +87% |
 
-### Experiment: no alive bonus
-- Final reward:
-- Episode length:
-- Observation:
+### Experiment: 2x energy penalty (high_energy)
+- **Config:** action_l2 weight -0.005 -> -0.01, energy weight -0.05 -> -0.1
+- **Best reward:** 46.18 (epoch 480)
+- **Final reward:** 38.57
+- **Wall clock:** 84s
+- **Observation:** Doubling energy penalties creates a "lazy" agent. The agent optimizes for stillness to minimize energy costs. Progress component (2.79) is the lowest of all experiments. The agent learns to move conservatively — penalizing energy too harshly suppresses locomotion.
 
-### Experiment: 2x forward velocity weight
-- Final reward:
-- Episode length:
-- Observation:
+### Experiment: no alive bonus (no_alive)
+- **Config:** alive weight 0.5 -> 0.0
+- **Best reward:** 65.33 (epoch 481)
+- **Final reward:** 54.33
+- **Wall clock:** 84s
+- **Observation:** Without survival incentive, the agent is slightly more aggressive in movement (progress=3.45) but less stable. It terminates more often without the alive bonus stabilizing behavior. Learning curve shows instability in later epochs (dips from 57.5 to 50.6). The alive bonus acts as a stabilizer.
 
-![Reward Comparison](../media/reward_comparison.png)
+### Experiment: 2x forward velocity weight (high_velocity)
+- **Config:** progress weight 1.0 -> 2.0
+- **Best reward:** 169.26 (epoch 480)
+- **Final reward:** 151.60
+- **Wall clock:** 88s
+- **Observation:** Doubling the locomotion reward dramatically increases performance. The agent aggressively prioritizes forward movement, accepting higher energy costs (energy=-0.97, highest of all experiments) as a trade-off. Reaches 100+ reward by epoch 200. The default Ant task is somewhat under-weighted on the locomotion objective.
+
+### Key Takeaways
+
+1. **Positive reward magnitude matters more than penalty tuning.** Doubling the positive reward (high_velocity: +87%) far outperforms adjusting penalties (high_energy: -49%).
+2. **Over-penalizing energy creates lazy agents.** The clearest failure mode — optimizing for stillness when energy costs dominate.
+3. **The alive bonus is stabilizing but not critical.** Removing it causes -28% performance and training instability, but doesn't cause catastrophic failure.
+4. **Energy-velocity trade-off is real.** The high_velocity agent consumed the most energy (-0.97) but had the highest progress (9.77) — classic speed-efficiency trade-off.

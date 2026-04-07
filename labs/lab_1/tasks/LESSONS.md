@@ -24,3 +24,10 @@ Format: Symptom / Root Cause / Fix / Takeaway
 - **Symptom:** Doubling num_envs from 512 to 1024 increases fps_step by ~1.5x (90K to 135K), but from 4096 to 8192 it increases by ~2x (440K to 870K). However, wall time increases because there are more total samples to process.
 - **Root Cause:** CartPole is extremely lightweight (4 obs, 1 action). At small num_envs, GPU compute is underutilized and overhead dominates. At larger num_envs, the GPU becomes better utilized. The fps_total metric (which includes policy network training) scales less aggressively because the training computation per iteration also grows with batch size.
 - **Takeaway:** For lightweight envs, use num_envs >= 4096 to saturate the GPU. The RTX 5090 can handle 8192 CartPole envs at ~870K fps_step using only 3.9 GB of its 32 GB VRAM.
+
+## L1-004: Positive reward magnitude matters more than penalty tuning
+
+- **Symptom:** In Ant reward experiments, doubling the locomotion reward (+87%) far outperformed adjusting penalties (high_energy: -49%, no_alive: -28%).
+- **Root Cause:** RL agents optimize for the signal with the largest magnitude. Increasing positive rewards gives a clearer gradient toward desired behavior. Increasing penalties can cause the agent to "freeze" and avoid action entirely (as seen in the high_energy experiment where the agent became "lazy").
+- **Fix:** N/A — this is a design insight, not a bug.
+- **Takeaway:** When engineering rewards: (1) Boost positive rewards for desired behavior before increasing penalties. (2) Over-penalizing energy creates lazy agents. (3) The alive bonus acts as a stabilizer — removing it causes training instability but not catastrophic failure. (4) Speed-efficiency trade-off is real: the fast agent (high_velocity) consumed 3.5x more energy.

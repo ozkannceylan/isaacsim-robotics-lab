@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Phase 3 - Ant Locomotion training
+Phase 4 - RL Framework Comparison (SKRL)
 
 ## Blockers
 
@@ -29,14 +29,14 @@ None
 - [ ] Compare wall-clock with MuJoCo CartPole (deferred to Phase 6 docs)
 
 ## Phase 3: Ant Locomotion
-- [ ] Train Ant with RL Games (default, 2048 envs, headless)
-- [ ] Train to convergence
-- [ ] Record evaluation video
-- [ ] Inspect reward components in TensorBoard
-- [ ] Reward experiment: increase energy penalty (2x)
-- [ ] Reward experiment: remove alive bonus
-- [ ] Reward experiment: increase forward velocity weight
-- [ ] Document reward experiment results
+- [x] Train Ant with RL Games (2048 envs, 1000 iters) -- best reward 90.35, ~3 min
+- [x] Train to convergence -- yes, peak at epoch 840
+- [x] Record evaluation video -- ant_trained.mp4 (457 KB)
+- [x] Inspect reward components: 7 terms (progress, alive, upright, move_to_target, action_l2, energy, joint_pos_limits)
+- [x] Reward experiment: high_energy (2x penalties) -- best 46.18 (-49%)
+- [x] Reward experiment: no_alive (remove alive bonus) -- best 65.33 (-28%)
+- [x] Reward experiment: high_velocity (2x progress) -- best 169.26 (+87%)
+- [x] Document reward experiment results -- benchmark_results.md updated
 
 ## Phase 4: RL Framework Comparison
 - [ ] Train CartPole with SKRL (PPO)
