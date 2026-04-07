@@ -31,3 +31,24 @@ Format: Symptom / Root Cause / Fix / Takeaway
 - **Root Cause:** RL agents optimize for the signal with the largest magnitude. Increasing positive rewards gives a clearer gradient toward desired behavior. Increasing penalties can cause the agent to "freeze" and avoid action entirely (as seen in the high_energy experiment where the agent became "lazy").
 - **Fix:** N/A — this is a design insight, not a bug.
 - **Takeaway:** When engineering rewards: (1) Boost positive rewards for desired behavior before increasing penalties. (2) Over-penalizing energy creates lazy agents. (3) The alive bonus acts as a stabilizer — removing it causes training instability but not catastrophic failure. (4) Speed-efficiency trade-off is real: the fast agent (high_velocity) consumed 3.5x more energy.
+
+## L1-005: SKRL logs only to TensorBoard, no stdout progress
+
+- **Symptom:** Running SKRL training produced no per-epoch reward output to stdout. Only TensorBoard event files were written. Made it impossible to monitor training progress interactively.
+- **Root Cause:** SKRL's `SequentialTrainer` writes metrics exclusively to TensorBoard via its logging system. Unlike RL Games, which prints epoch-by-epoch stats (reward, fps, loss) to stdout, SKRL's design philosophy is to use TensorBoard as the sole monitoring interface.
+- **Fix:** After training completes, use Python's `tensorboard.backend.event_processing.EventAccumulator` to extract metrics programmatically. For live monitoring, launch a TensorBoard server (`tensorboard --logdir /opt/IsaacLab/logs/skrl/`).
+- **Takeaway:** Always check the framework's logging behavior before training. For SKRL, prepare TensorBoard access or a post-hoc metric extraction script before starting long runs.
+
+## L1-006: SKRL uses timesteps, RL Games uses epochs/iterations
+
+- **Symptom:** SKRL config has `trainer.timesteps: 2400` instead of `max_epochs` or `max_iterations`. Confusing when trying to match training durations between frameworks.
+- **Root Cause:** SKRL counts total environment interaction steps (timesteps = iterations * rollouts), while RL Games counts optimization epochs. The Isaac Lab wrapper script converts `--max_iterations` to timesteps via `timesteps = max_iterations * agent.rollouts`.
+- **Fix:** N/A — understand the conversion: SKRL timesteps = iterations * rollouts_per_iteration. For CartPole with rollouts=16: 300 iters = 4800 timesteps.
+- **Takeaway:** When comparing frameworks, always normalize to "total environment steps" (timesteps * num_envs) to get an apples-to-apples comparison. The `--max_iterations` CLI flag handles the conversion automatically.
+
+## L1-007: RL Games achieves higher peak rewards but with more oscillation
+
+- **Symptom:** On Ant, RL Games peaked at 90.35 (epoch 840) but dropped to 68.31 by epoch 1000. SKRL peaked at 72.63 at epoch 1000 and was still climbing steadily.
+- **Root Cause:** RL Games uses a higher value loss coefficient (critic_coef=2.0 vs SKRL's value_loss_scale=1.0), mixed precision, and different minibatch strategies. The stronger value function fitting helps faster convergence but can lead to more reward oscillation as the policy overshoots optimal behavior.
+- **Fix:** N/A — different training dynamics, not a bug.
+- **Takeaway:** Higher peak reward does not mean better training. SKRL's steadier learning curve suggests it might converge to a higher final reward with more iterations. For practical deployment, consider using the best checkpoint (RL Games) rather than the final one, or train SKRL longer for more stable convergence.

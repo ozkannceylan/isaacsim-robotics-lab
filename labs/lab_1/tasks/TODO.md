@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Phase 4 - RL Framework Comparison (SKRL)
+Phase 5 - Headless vs GUI and Logging
 
 ## Blockers
 
@@ -39,11 +39,11 @@ None
 - [x] Document reward experiment results -- benchmark_results.md updated
 
 ## Phase 4: RL Framework Comparison
-- [ ] Train CartPole with SKRL (PPO)
-- [ ] Train Ant with SKRL
-- [ ] Measure: steps/sec, time-to-convergence, final reward
-- [ ] Document API differences
-- [ ] Write comparison table
+- [x] Train CartPole with SKRL (PPO) -- 300 iters, 136s wall time, best mean reward 4.92
+- [x] Train Ant with SKRL -- 1000 iters, 183s wall time, best mean reward 72.63
+- [x] Measure: steps/sec, time-to-convergence, final reward -- CartPole ~78K FPS, Ant ~193K FPS
+- [x] Document API differences -- config schemas, logging, model definition
+- [x] Write comparison table -- full table in benchmark_results.md
 
 ## Phase 5: Headless vs GUI and Logging
 - [ ] Train CartPole with GUI — measure FPS
