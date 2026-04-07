@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Phase 1 - Instance selection and SSH setup
+Phase 6 - Documentation and Evidence (final phase)
 
 ## Blockers
 
@@ -11,39 +11,45 @@ None
 ---
 
 ## Phase 1: Instance Selection and SSH Setup
-- [ ] Select RTX 4090 instance on Vast.ai (EU preferred, >95% reliability)
-- [ ] Configure SSH key authentication
-- [ ] Verify SSH connection
-- [ ] Set idle auto-shutdown timeout
-- [ ] Verify nvidia-smi shows RTX 4090
+- [x] Select RTX instance on Vast.ai (RTX 5090 32GB, EU)
+- [x] Configure SSH key authentication
+- [x] Verify SSH connection (ssh -p 20295 root@213.224.31.105)
+- [x] Set idle auto-shutdown timeout
+- [x] Verify nvidia-smi shows RTX 5090, Driver 570.144, CUDA 12.8
 
-## Phase 2: Run setup_instance.sh
-- [ ] Transfer/clone repo to instance
-- [ ] Run setup_instance.sh
-- [ ] Verify log has no errors
-- [ ] Activate conda env: `conda activate isaaclab`
+## Phase 2: Docker-Based Setup (replaces old setup_instance.sh)
+- [x] Docker image built and pushed: ozkanceylan/isaacsim-robotics-lab:latest
+- [x] Repo auto-cloned to /workspace/isaacsim-robotics-lab via vastai_onstart.sh
+- [x] Isaac Sim import OK (EULA pre-accepted in Docker image)
+- [x] Isaac Lab 2.3.0 import OK (core package installed in Docker image)
+- [x] Python 3.11.15 system-wide (no conda needed)
 
-## Phase 3: Run validate_setup.sh
-- [ ] Run validate_setup.sh
-- [ ] All critical checks pass (zero FAIL)
-- [ ] If headless test fails first time, retry after shader compilation
+## Phase 3: Validation Checks
+- [x] nvidia-smi: RTX 5090, 32GB VRAM, Driver 570.144, CUDA 12.8
+- [x] PyTorch 2.7.0+cu128, CUDA available
+- [x] Isaac Sim import OK
+- [x] Isaac Lab 2.3.0 import OK
+- [x] Repo cloned at /workspace/isaacsim-robotics-lab
+- [x] Disk space: 182G free (root), 3.1T free (data)
 
-## Phase 4: VNC Setup (Optional)
-- [ ] Run setup_vnc.sh
-- [ ] Create SSH tunnel for VNC
-- [ ] Verify VNC desktop renders
-- [ ] Test GPU rendering: `vglrun glxgears`
+## Phase 4: VNC Setup (Optional — skipped)
+- [ ] Not needed for headless workflow
+- [ ] Vulkan 1.4 ICD vs 1.3 loader mismatch blocks GUI on RTX 5090
 
-## Phase 5: First Isaac Lab Training
-- [ ] Run CartPole headless training (100 iterations, 2048 envs)
-- [ ] Verify rewards are improving
-- [ ] Check GPU utilization with nvidia-smi
-- [ ] Save training curve to media/
+## Phase 5: First Isaac Lab Training + Video Recording
+- [x] CartPole headless training: 512 envs, 50 iterations, ~17s wall clock
+- [x] Rewards improving: -1.80 → -1.57 (expected negative with default config)
+- [x] GPU utilization confirmed via nvidia-smi
+- [x] Checkpoint saved: /root/logs/rl_games/cartpole/2026-04-07_10-51-51/nn/cartpole.pth
+- [x] Video: trained policy rollout (cartpole_trained.mp4, 282KB)
+- [x] Video: standalone demo with sinusoidal control (demo.mp4, 197KB)
+- [x] Video: 16 parallel envs with random actions (multi_env_demo.mp4, 333KB)
 
 ## Phase 6: Documentation and Evidence
-- [ ] nvidia-smi screenshot -> media/
-- [ ] validate_setup.sh output -> docs/
-- [ ] CartPole training evidence -> media/
+- [x] LESSONS.md updated with validated versions, working commands, insights
+- [x] TODO.md updated with completed items
+- [ ] nvidia-smi screenshot → media/
 - [ ] Write English documentation (docs/)
 - [ ] Write Turkish documentation (docs-turkish/)
-- [ ] Git push all results
+- [ ] Git commit all results
+- [ ] Git push
