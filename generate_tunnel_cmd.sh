@@ -50,37 +50,27 @@ fi
 # Print tunnel commands
 #
 # Ports:
-#   8211           — WebRTC web client (--livestream 2)
-#   8899           — WebSocket streaming (--livestream 1, optional)
-#   47995-48012    — Omniverse native streaming media ports
+#   8011    — HTTP API (health check, Swagger docs)
+#   49100   — WebRTC signaling (Kit Remote connects here)
 # ---------------------------------------------------------------------------
 echo "============================================================"
 echo "  SSH Tunnel for Isaac Sim WebRTC Streaming"
 echo "============================================================"
 echo ""
-echo "Run one of these on your LOCAL machine:"
+echo "Run this on your LOCAL machine:"
 echo ""
-echo "--- Minimal (WebRTC browser streaming only) ---------------"
-echo ""
-echo "  ssh -p ${SSH_PORT} -L 8211:localhost:8211 root@${PUBLIC_IP}"
-echo ""
-echo "--- Full (includes native streaming ports) -----------------"
-echo ""
-printf "  ssh -p %s \\\\\n" "$SSH_PORT"
-printf "    -L 8211:localhost:8211 \\\\\n"
-printf "    -L 8899:localhost:8899 \\\\\n"
-
-for port in $(seq 47995 48012); do
-    printf "    -L %s:localhost:%s \\\\\n" "$port" "$port"
-done
-
-printf "    root@%s\n" "$PUBLIC_IP"
-
+echo "  ssh -p ${SSH_PORT} -L 8011:localhost:8011 -L 49100:localhost:49100 root@${PUBLIC_IP}"
 echo ""
 echo "------------------------------------------------------------"
-echo "After the tunnel is active, open in your browser:"
+echo "After the tunnel is active:"
 echo ""
-echo "  http://localhost:8211/streaming/webrtc-client"
+echo "  1. Install 'Kit Remote' from NVIDIA Omniverse Launcher"
+echo "     (Isaac Sim 5.1 pip install has no browser viewer)"
+echo ""
+echo "  2. In Kit Remote, connect to: localhost:49100"
+echo ""
+echo "  3. Health check (browser): http://localhost:8011/v1/streaming/ready"
+echo "     API docs (Swagger):     http://localhost:8011/docs"
 echo ""
 echo "------------------------------------------------------------"
 

@@ -32,12 +32,12 @@ conda activate isaaclab
 # ---------------------------------------------------------------------------
 cat > /etc/profile.d/isaaclab_env.sh << 'ENVEOF'
 export HEADLESS=1
-export ISAACLAB_LIVESTREAM=2
+export LIVESTREAM=2
 ENVEOF
 chmod +x /etc/profile.d/isaaclab_env.sh
 export HEADLESS=1
-export ISAACLAB_LIVESTREAM=2
-echo "[OK]   Set HEADLESS=1, ISAACLAB_LIVESTREAM=2 (WebRTC)" | tee -a "$LOG"
+export LIVESTREAM=2
+echo "[OK]   Set HEADLESS=1, LIVESTREAM=2 (WebRTC)" | tee -a "$LOG"
 
 # ---------------------------------------------------------------------------
 # Repair Isaac Lab core package if only namespace packages are present

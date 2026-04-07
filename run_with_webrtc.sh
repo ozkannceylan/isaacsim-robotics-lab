@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
 TARGET_SCRIPT="${ISAACLAB_WEBRTC_TARGET:-$ROOT_DIR/labs/lab_1/scripts/train_cartpole.sh}"
-LIVESTREAM_MODE="${ISAACLAB_LIVESTREAM:-2}"
+LIVESTREAM_MODE="${LIVESTREAM:-2}"
 CONDA_SH="${CONDA_SH:-/opt/conda/etc/profile.d/conda.sh}"
 CONDA_ENV_NAME="${CONDA_ENV_NAME:-isaaclab}"
 
@@ -48,18 +48,20 @@ if ! python -c "from isaaclab.app import AppLauncher" >/dev/null 2>&1; then
 fi
 
 export HEADLESS=1
-export ISAACLAB_LIVESTREAM="$LIVESTREAM_MODE"
+export LIVESTREAM="$LIVESTREAM_MODE"
 
 echo "=== Isaac Lab WebRTC Launch ==="
 echo "  Target:      $TARGET_SCRIPT"
 echo "  Headless:    1"
 echo "  Livestream:  $LIVESTREAM_MODE"
 echo ""
-echo "  After launch, access the stream at:"
-echo "    http://localhost:8211/streaming/webrtc-client"
+echo "  Streaming ports (once app starts):"
+echo "    HTTP API / health:  http://localhost:8011/v1/streaming/ready"
+echo "    WebRTC server:      ws://localhost:49100"
+echo "    API docs (Swagger): http://localhost:8011/docs"
 echo ""
-echo "  (Requires SSH tunnel — run ./generate_tunnel_cmd.sh on the instance"
-echo "   and copy the command to your local terminal.)"
+echo "  Connect with NVIDIA Kit Remote client, or SSH-tunnel both ports:"
+echo "    ssh -L 8011:localhost:8011 -L 49100:localhost:49100 root@<host> -p <port>"
 echo ""
 
 case "$TARGET_SCRIPT" in
