@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Read and follow: /home/ozkan/Documents/MyProjects/_meta/workflow-rules.md
+Read and follow: C:/Users/ozkan/projects/_meta/workflow-rules.md
 
 ## Goal
 
@@ -22,17 +22,35 @@ This project complements `mujoco-robotics-lab` (foundational robotics: kinematic
 
 ## Common Commands
 
-### Cloud setup (Vast.ai)
+### Cloud setup (Vast.ai — Docker-based)
 
 ```bash
-# SSH into Vast.ai instance
+# Docker image (pre-built with Isaac Sim + Isaac Lab):
+# docker.io/ozkanceylan/isaacsim-robotics-lab:latest
+
+# Build and push Docker image (run locally from repo root):
+bash docker/build_and_push.sh
+
+# SSH into running Vast.ai instance:
 ssh -p <port> root@<vast-ip>
 
-# Verify GPU
-nvidia-smi  # Expect: RTX 4090, driver 535+
+# On-start script runs automatically on boot (docker/vastai_onstart.sh):
+#   - Clones/pulls project repo to /workspace/isaacsim-robotics-lab
+#   - Symlinks outputs/checkpoints/logs -> /data/ (persistent volume)
+#   - Activates isaaclab conda env
 
-# One-time setup (run from the repo on the instance):
-bash labs/lab_0/scripts/setup_instance.sh
+# Verify GPU
+nvidia-smi  # Expect: RTX 4090/5090, driver 535+
+
+# Validate full stack (Claude Code slash command):
+# /validate-instance ssh -p <port> root@<vast-ip>
+```
+
+### Legacy manual setup (reference only)
+
+```bash
+# Old non-Docker setup (labs/lab_0/scripts/setup_instance.sh)
+# Kept for reference. Use Docker pipeline above for new instances.
 ```
 
 ### Isaac Lab (pip-based install)
@@ -105,7 +123,7 @@ ROS2       = deployment bridge (sim-to-real)
 
 - **Target robot:** Unitree G1 humanoid
 - **Simulator:** Isaac Sim 5.1 + Isaac Lab 2.3.x
-- **Compute:** Vast.ai RTX 4090 (24GB VRAM)
+- **Compute:** Vast.ai RTX 4090 (24GB) or RTX 5090 (32GB)
 - **OS:** Ubuntu 22.04 (NGC container)
 - **Python:** 3.11
 - **RL frameworks:** RL Games (primary), SKRL (secondary)
@@ -252,15 +270,19 @@ Local (code editing, git, docs)
   |  git push
   v
 GitHub (source of truth)
-  |  git pull
+  |  git pull (via vastai_onstart.sh, automatic on boot)
   v
 Vast.ai Instance (execution, training)
-  |  scp / git push
+  |  /data volume persists across restarts
+  |  scp / git push for code changes
   v
 Local (analysis, portfolio writing)
 ```
 
-Never rely on Vast.ai disk persistence for critical data. Always push to GitHub or download artifacts.
+- Docker image (`ozkanceylan/isaacsim-robotics-lab:latest`) has Isaac Sim + Isaac Lab pre-installed
+- Project code is cloned fresh on each boot via `docker/vastai_onstart.sh`
+- Training artifacts symlinked to `/data/` (persistent volume) — survives instance destruction
+- Never rely on instance disk for critical data. Always push to GitHub or download artifacts.
 
 ---
 
@@ -297,7 +319,7 @@ Never rely on Vast.ai disk persistence for critical data. Always push to GitHub 
 First launch downloads ~10GB of assets and compiles shaders. Subsequent launches are faster (10-30s). Be patient on first run.
 
 ### RT Core requirement
-Isaac Sim rendering requires RTX GPUs with RT Cores. A100/H100 are NOT supported. Always use RTX 4090 on Vast.ai.
+Isaac Sim rendering requires RTX GPUs with RT Cores. A100/H100 are NOT supported. Use RTX 4090 or RTX 5090 on Vast.ai.
 
 ### Isaac Lab version compatibility
 Isaac Lab 2.3.0 requires Isaac Sim 5.1. Version mismatches cause silent failures. Always verify:
@@ -316,11 +338,12 @@ pip install --force-reinstall "numpy<2"
 Install VirtualGL and use `vglrun` prefix for GPU-accelerated rendering through VNC.
 
 ### num_envs and VRAM
-RTX 4090 has 24GB VRAM. Approximate limits:
-- Simple envs (CartPole): up to 8192 envs
+RTX 4090 has 24GB, RTX 5090 has 32GB VRAM. Approximate limits (4090):
+- Simple envs (CartPole): up to 8192 envs (min 512 for default rl_games config)
 - Medium envs (Ant): up to 4096 envs
 - Complex envs (G1 humanoid): up to 1024-2048 envs (depends on observation/action space)
 Monitor with `nvidia-smi` during training. OOM = reduce num_envs.
+Note: CartPole rl_games config has minibatch_size=8192, horizon=16, so num_envs >= 512 required.
 
 ### Headless mode requires explicit flag
 Without `--headless`, Isaac Sim tries to open a GUI window. On cloud without display, this crashes.

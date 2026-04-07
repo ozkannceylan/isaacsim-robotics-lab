@@ -1,0 +1,9 @@
+# Force LF line endings for shell scripts (prevents Windows CRLF issues on Linux)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Keep Python files with LF
+*.py text eol=lf
+
+# Auto-detect for everything else
+* text=auto

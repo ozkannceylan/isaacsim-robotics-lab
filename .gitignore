@@ -38,6 +38,9 @@ media/*.jpg
 .DS_Store
 Thumbs.db
 
+# Docker
+docker/.env
+
 # Environment / secrets
 .env
 *.key
