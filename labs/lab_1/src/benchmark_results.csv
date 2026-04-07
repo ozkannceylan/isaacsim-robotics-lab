@@ -1,0 +1,6 @@
+num_envs,wall_time_sec,iterations,task,framework,avg_fps_step,avg_fps_total,peak_gpu_mem_mib
+512,27,100,Isaac-Cartpole-v0,rl_games,90867,59824,2925
+1024,34,100,Isaac-Cartpole-v0,rl_games,135277,77806,2991
+2048,46,100,Isaac-Cartpole-v0,rl_games,231963,104896,3123
+4096,63,100,Isaac-Cartpole-v0,rl_games,440570,136103,3389
+8192,98,100,Isaac-Cartpole-v0,rl_games,869586,169718,3937

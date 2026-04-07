@@ -49,7 +49,8 @@ None
 - [x] LESSONS.md updated with validated versions, working commands, insights
 - [x] TODO.md updated with completed items
 - [ ] nvidia-smi screenshot → media/
-- [ ] Write English documentation (docs/)
-- [ ] Write Turkish documentation (docs-turkish/)
+- [x] Write English documentation (docs/cloud-setup-guide.md)
+- [x] Write Turkish documentation (docs-turkish/cloud-setup-guide.md)
+- [x] Write Lab 0 README.md (quick-start guide)
 - [ ] Git commit all results
 - [ ] Git push

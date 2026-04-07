@@ -30,6 +30,13 @@ done
 
 FRAMEWORKS=("rl_games" "skrl")
 
+# Isaac Lab reads HEADLESS env var (int). Only pass --headless CLI flag if env var is NOT set.
+if [[ -z "${HEADLESS:-}" ]]; then
+    HEADLESS_FLAG="--headless"
+else
+    HEADLESS_FLAG=""
+fi
+
 echo "=== Framework Comparison ==="
 echo "  Task:       $TASK"
 echo "  num_envs:   $NUM_ENVS"
@@ -55,7 +62,7 @@ for FW in "${FRAMEWORKS[@]}"; do
         --task "$TASK" \
         --num_envs "$NUM_ENVS" \
         --max_iterations "$ITERATIONS" \
-        --headless \
+        $HEADLESS_FLAG \
         2>&1 | tail -5
 
     END_TIME=$(date +%s.%N)

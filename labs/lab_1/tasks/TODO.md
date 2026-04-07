@@ -2,30 +2,31 @@
 
 ## Current Focus
 
-Phase 1 - Architecture study and documentation
+Phase 3 - Ant Locomotion training
 
 ## Blockers
 
-- Lab 0 must be complete (working Isaac Sim + Isaac Lab on Vast.ai)
+None
 
 ---
 
 ## Phase 1: Architecture Study and Documentation
-- [ ] Study InteractiveScene, manager-based env, direct env
-- [ ] Document the 4 managers (Observation, Action, Reward, Termination)
-- [ ] Understand USD scene composition and asset loading
-- [ ] Study num_envs GPU parallelism and tensor batching
-- [ ] Write docs/isaac_lab_architecture.md
-- [ ] Create architecture concept diagram
+- [x] Study InteractiveScene, manager-based env, direct env
+- [x] Document the 4 managers (Observation, Action, Reward, Termination)
+- [x] Understand USD scene composition and asset loading
+- [x] Study num_envs GPU parallelism and tensor batching
+- [x] Write docs/isaac_lab_architecture.md
+- [ ] Create architecture concept diagram (deferred to Phase 6)
 
 ## Phase 2: CartPole Training and num_envs Benchmark
-- [ ] Train CartPole with RL Games (default, 2048 envs, headless)
-- [ ] Verify training converges
-- [ ] Run num_envs benchmark: [64, 256, 1024, 2048, 4096, 8192]
-- [ ] Measure steps/sec for each num_envs
-- [ ] Generate throughput scaling chart
-- [ ] Save TensorBoard logs and training curves
-- [ ] Compare wall-clock with MuJoCo CartPole
+- [x] Train CartPole with RL Games (2048 envs, 300 iterations, headless) -- converged, best reward 4.93
+- [x] Verify training converges -- yes, reward ~4.9/5.0
+- [x] Run num_envs benchmark: [512, 1024, 2048, 4096, 8192] (min 512 for rl_games config)
+- [x] Measure steps/sec for each num_envs -- saved to labs/lab_1/src/benchmark_results.csv
+- [x] Fix HEADLESS env var conflict in all training scripts
+- [ ] Generate throughput scaling chart (deferred to Phase 6 docs)
+- [x] Save TensorBoard logs and training curves -- logs/rl_games/cartpole/2026-04-07_11-23-54/
+- [ ] Compare wall-clock with MuJoCo CartPole (deferred to Phase 6 docs)
 
 ## Phase 3: Ant Locomotion
 - [ ] Train Ant with RL Games (default, 2048 envs, headless)
@@ -53,8 +54,8 @@ Phase 1 - Architecture study and documentation
 - [ ] Record evaluation video from checkpoint
 
 ## Phase 6: Documentation and Portfolio
-- [ ] Write docs/isaac_lab_architecture.md
-- [ ] Write docs/benchmark_results.md
+- [x] Write docs/isaac_lab_architecture.md
+- [x] Write docs/benchmark_results.md (filled with Phase 2 data)
 - [ ] Write Turkish documentation (docs-turkish/)
 - [ ] Collect all media artifacts
 - [ ] Update LESSONS.md

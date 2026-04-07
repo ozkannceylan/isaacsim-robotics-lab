@@ -36,6 +36,13 @@ if [[ ! -f "$TRAIN_SCRIPT" ]]; then
     exit 1
 fi
 
+# Isaac Lab reads HEADLESS env var (int). Only pass --headless CLI flag if env var is NOT set.
+if [[ -z "${HEADLESS:-}" ]]; then
+    HEADLESS_FLAG="--headless"
+else
+    HEADLESS_FLAG=""
+fi
+
 # num_envs values to test (min 512 for CartPole rl_games default minibatch_size)
 ENV_COUNTS=(512 1024 2048 4096 8192)
 
@@ -58,7 +65,7 @@ for N in "${ENV_COUNTS[@]}"; do
         --task "$TASK" \
         --num_envs "$N" \
         --max_iterations "$ITERATIONS" \
-        --headless \
+        $HEADLESS_FLAG \
         2>&1 | tee /tmp/bench_${N}.log | tail -5
 
     END_TIME=$(date +%s.%N)

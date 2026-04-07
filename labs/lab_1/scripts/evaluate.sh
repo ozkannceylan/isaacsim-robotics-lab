@@ -12,10 +12,16 @@ set -euo pipefail
 FRAMEWORK="rl_games"
 TASK=""
 CHECKPOINT=""
-HEADLESS="--headless"
 VIDEO_ARGS=""
 NUM_ENVS=64
 ISAACLAB_DIR="${ISAACLAB_DIR:-/opt/IsaacLab}"
+
+# Isaac Lab reads HEADLESS env var (int). Only pass --headless CLI flag if env var is NOT set.
+if [[ -z "${HEADLESS:-}" ]]; then
+    HEADLESS_FLAG="--headless"
+else
+    HEADLESS_FLAG=""
+fi
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -24,7 +30,7 @@ while [[ $# -gt 0 ]]; do
         --task)         TASK="$2"; shift 2 ;;
         --checkpoint)   CHECKPOINT="$2"; shift 2 ;;
         --num_envs)     NUM_ENVS="$2"; shift 2 ;;
-        --gui)          HEADLESS=""; shift ;;
+        --gui)          HEADLESS_FLAG=""; export HEADLESS=0; shift ;;
         --video)        VIDEO_ARGS="--video --video_length 300 --video_interval 100"; shift ;;
         *)              shift ;;
     esac
@@ -47,7 +53,7 @@ echo "  Framework:  $FRAMEWORK"
 echo "  Task:       $TASK"
 echo "  Checkpoint: $CHECKPOINT"
 echo "  num_envs:   $NUM_ENVS"
-echo "  Mode:       $([ -n "$HEADLESS" ] && echo 'headless' || echo 'GUI')"
+echo "  Mode:       $([ -n "$HEADLESS_FLAG" ] && echo 'headless' || echo 'GUI (HEADLESS env='${HEADLESS:-unset}')')"
 echo "  Video:      $([ -n "$VIDEO_ARGS" ] && echo 'yes' || echo 'no')"
 echo ""
 
@@ -56,5 +62,5 @@ bash "$ISAACLAB_DIR/isaaclab.sh" -p "$PLAY_SCRIPT" \
     --task "$TASK" \
     --num_envs "$NUM_ENVS" \
     --checkpoint "$CHECKPOINT" \
-    $HEADLESS \
+    $HEADLESS_FLAG \
     $VIDEO_ARGS

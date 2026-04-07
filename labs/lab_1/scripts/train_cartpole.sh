@@ -15,9 +15,15 @@ set -euo pipefail
 FRAMEWORK="rl_games"
 NUM_ENVS=2048
 MAX_ITERATIONS=300
-HEADLESS="--headless"
 EXTRA_ARGS=""
 TASK="Isaac-Cartpole-v0"
+
+# Isaac Lab reads HEADLESS env var (int). Only pass --headless CLI flag if env var is NOT set.
+if [[ -z "${HEADLESS:-}" ]]; then
+    HEADLESS_FLAG="--headless"
+else
+    HEADLESS_FLAG=""
+fi
 
 # Parse args
 while [[ $# -gt 0 ]]; do
@@ -25,7 +31,7 @@ while [[ $# -gt 0 ]]; do
         --framework)    FRAMEWORK="$2"; shift 2 ;;
         --num_envs)     NUM_ENVS="$2"; shift 2 ;;
         --max_iterations) MAX_ITERATIONS="$2"; shift 2 ;;
-        --gui)          HEADLESS=""; shift ;;
+        --gui)          HEADLESS_FLAG=""; export HEADLESS=0; shift ;;
         --task)         TASK="$2"; shift 2 ;;
         *)              EXTRA_ARGS="$EXTRA_ARGS $1"; shift ;;
     esac
@@ -46,12 +52,12 @@ echo "  Framework:      $FRAMEWORK"
 echo "  Task:           $TASK"
 echo "  num_envs:       $NUM_ENVS"
 echo "  max_iterations: $MAX_ITERATIONS"
-echo "  Mode:           $([ -n "$HEADLESS" ] && echo 'headless' || echo 'GUI')"
+echo "  Mode:           $([ -n "$HEADLESS_FLAG" ] && echo 'headless' || echo 'GUI (HEADLESS env='${HEADLESS:-unset}')')"
 echo ""
 
 bash "$ISAACLAB_DIR/isaaclab.sh" -p "$TRAIN_SCRIPT" \
     --task "$TASK" \
     --num_envs "$NUM_ENVS" \
     --max_iterations "$MAX_ITERATIONS" \
-    $HEADLESS \
+    $HEADLESS_FLAG \
     $EXTRA_ARGS

@@ -345,8 +345,8 @@ RTX 4090 has 24GB, RTX 5090 has 32GB VRAM. Approximate limits (4090):
 Monitor with `nvidia-smi` during training. OOM = reduce num_envs.
 Note: CartPole rl_games config has minibatch_size=8192, horizon=16, so num_envs >= 512 required.
 
-### Headless mode requires explicit flag
-Without `--headless`, Isaac Sim tries to open a GUI window. On cloud without display, this crashes.
+### Headless mode: env var vs CLI flag conflict
+Isaac Lab supports headless via `HEADLESS=1` env var OR `--headless` CLI flag. **Do not use both.** Our Docker image sets `HEADLESS=1` via `vastai_onstart.sh`. If the env var is set, passing `--headless` CLI causes `ValueError: invalid literal for int()`. All lab scripts now check `${HEADLESS:-}` before adding the flag. Without either mechanism, Isaac Sim tries to open a GUI window on cloud and crashes.
 
 ### USD asset paths
 Isaac Lab assets are hosted on AWS S3. First load per asset may take minutes depending on network. Assets are cached locally after first download.
