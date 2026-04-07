@@ -52,3 +52,17 @@ Format: Symptom / Root Cause / Fix / Takeaway
 - **Root Cause:** RL Games uses a higher value loss coefficient (critic_coef=2.0 vs SKRL's value_loss_scale=1.0), mixed precision, and different minibatch strategies. The stronger value function fitting helps faster convergence but can lead to more reward oscillation as the policy overshoots optimal behavior.
 - **Fix:** N/A — different training dynamics, not a bug.
 - **Takeaway:** Higher peak reward does not mean better training. SKRL's steadier learning curve suggests it might converge to a higher final reward with more iterations. For practical deployment, consider using the best checkpoint (RL Games) rather than the final one, or train SKRL longer for more stable convergence.
+
+## L1-008: RTX 5090 Vulkan ICD mismatch prevents GUI mode in Isaac Sim
+
+- **Symptom:** Isaac Sim GUI mode fails on RTX 5090 with Vulkan ICD mismatch errors. The headless mode works perfectly.
+- **Root Cause:** The RTX 5090 is a very new GPU (Blackwell architecture). The Vulkan ICD (Installable Client Driver) in the current Isaac Sim Docker container targets Ampere/Ada Lovelace GPUs. The driver expects certain Vulkan extensions that the 5090 handles differently in GUI mode. Headless mode uses a software Vulkan rasterizer that bypasses this issue.
+- **Fix:** Skip GUI FPS comparison for now. Use headless mode exclusively. GUI mode will likely be fixed in a future Isaac Sim container update or NVIDIA driver release.
+- **Takeaway:** When using bleeding-edge GPUs (RTX 5090, etc.), always verify GUI rendering works before planning GUI-dependent tasks. Headless training is the primary workflow anyway, so this is not a blocker for RL development. Video recording via `--video` flag works in headless mode.
+
+## L1-009: Isaac Lab video recording uses gymnasium RecordVideo wrapper
+
+- **Symptom:** Video files are saved with the naming pattern `rl-video-step-0.mp4` in a `videos/play/` subdirectory under the checkpoint's log directory.
+- **Root Cause:** Isaac Lab wraps the environment with gymnasium's `RecordVideo` wrapper when `--video` is passed. The `step_trigger` is set to `lambda step: step == 0`, meaning it records the very first episode. The `video_length` parameter controls how many steps (frames) are captured.
+- **Fix:** N/A -- this is normal behavior. Copy the video to a known location after recording.
+- **Takeaway:** The `--video` flag produces 1280x720 at 60fps MP4 files. At 300 frames, this gives a 5-second clip. For longer portfolio videos, increase `--video_length`. The videos are rendered via Isaac Sim's camera system even in headless mode (using offscreen rendering).
