@@ -388,3 +388,15 @@ When Isaac Lab training fails or produces bad results:
 4. Check `labs/lab_N/tasks/LESSONS.md` for known issues
 5. Resume from "Current Focus" in TODO.md
 6. If on cloud: verify GPU with `nvidia-smi`, check disk space with `df -h`
+
+## Domain knowledge retrieval
+
+When stuck on a robotics, controls, or simulation problem (unexpected
+behavior, cryptic error, physics that looks wrong), before web search
+or guessing:
+
+1. rg -i "<distinctive error token>" /opt/data/wiki-lessons/
+2. No hit: read /opt/data/wiki-lessons/INDEX.md and match your symptom against
+   the one-line rules.
+3. Open the matching note. Apply the Rule. Respect Scope and limits.
+4. Cite the lesson id in your output when you use one.
